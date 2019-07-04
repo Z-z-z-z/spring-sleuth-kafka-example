@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: 127.0.0.1:9092
+          autoCreateTopics: true
+        bindings:
+          input:
+            consumer:
+              enableDlq: true
+              dlqName: svc1-errors
+
+      bindings:
+        input:
+          group: service1
+          destination: svc1-input
+          contentType: application/json
+          consumer:
+            max-attempts: 1
+        output:
+          destination: svc2-input
+          contentType: application/json
+
+hello:
+  message: "Hello, %s!"
+
